@@ -1,8 +1,15 @@
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { NextAuthConfig } from "next-auth";
+import github from "next-auth/providers/github";
 import { NextResponse } from "next/server";
+import { prisma } from "./prisma/db";
 
 export const authConfig = {
-	providers: [],
+	adapter: PrismaAdapter(prisma),
+	providers: [github],
+	session: {
+		strategy: "jwt",
+	},
 	callbacks: {
 		authorized({ auth, request: { nextUrl } }) {
 			const isLoggedIn = !!auth?.user;
