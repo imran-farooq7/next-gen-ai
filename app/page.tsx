@@ -2,15 +2,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 
 export default async function Home() {
-	// Make sure to include these imports:
-	// import { GoogleGenerativeAI } from "@google/generative-ai";
-	const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API!);
-	const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-	const prompt = "Write a story about a magic backpack.";
-
-	const result = await model.generateContent(prompt);
-	console.log(result.response.text());
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between p-24">
 			<div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
