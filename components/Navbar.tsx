@@ -37,7 +37,7 @@ function classNames(...classes: any[]) {
 	return classes.filter(Boolean).join(" ");
 }
 
-export default function Navbar({ user }: { user: User }) {
+export default function Navbar({ user }: { user?: User }) {
 	return (
 		<Disclosure as="header" className="bg-gray-800">
 			{({ open }) => (
