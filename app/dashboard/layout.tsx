@@ -1,5 +1,4 @@
 "use client";
-import { Fragment, useState } from "react";
 import {
 	Dialog,
 	DialogPanel,
@@ -8,27 +7,34 @@ import {
 } from "@headlessui/react";
 import {
 	Bars3Icon,
-	CalendarIcon,
-	ChartPieIcon,
-	DocumentDuplicateIcon,
-	FolderIcon,
+	ClockIcon,
+	Cog6ToothIcon,
 	HomeIcon,
-	UsersIcon,
+	WalletIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useState } from "react";
 
 const navigation = [
-	{ name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-	{ name: "Team", href: "#", icon: UsersIcon, current: false },
-	{ name: "Projects", href: "#", icon: FolderIcon, current: false },
-	{ name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-	{ name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-	{ name: "Reports", href: "#", icon: ChartPieIcon, current: false },
-];
-const teams = [
-	{ id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-	{ id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-	{ id: 3, name: "Workcation", href: "#", initial: "W", current: false },
+	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
+	{
+		name: "History",
+		href: "/dashboard/history",
+		icon: ClockIcon,
+		current: false,
+	},
+	{
+		name: "Billing",
+		href: "/dashboard/billing",
+		icon: WalletIcon,
+		current: false,
+	},
+	{
+		name: "Settings",
+		href: "/dashboard/settings",
+		icon: Cog6ToothIcon,
+		current: false,
+	},
 ];
 
 function classNames(...classes: any[]) {
@@ -125,31 +131,6 @@ export default function DashboardLayout({
 														))}
 													</ul>
 												</li>
-												<li>
-													<div className="text-xs font-semibold leading-6 text-gray-400">
-														Your teams
-													</div>
-													<ul role="list" className="-mx-2 mt-2 space-y-1">
-														{teams.map((team) => (
-															<li key={team.name}>
-																<a
-																	href={team.href}
-																	className={classNames(
-																		team.current
-																			? "bg-gray-800 text-white"
-																			: "text-gray-400 hover:text-white hover:bg-gray-800",
-																		"group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-																	)}
-																>
-																	<span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-																		{team.initial}
-																	</span>
-																	<span className="truncate">{team.name}</span>
-																</a>
-															</li>
-														))}
-													</ul>
-												</li>
 											</ul>
 										</nav>
 									</div>
@@ -175,11 +156,11 @@ export default function DashboardLayout({
 														item.current
 															? "bg-gray-800 text-white"
 															: "text-gray-400 hover:text-white hover:bg-gray-800",
-														"group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+														"group flex items-center gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold"
 													)}
 												>
 													<item.icon
-														className="h-6 w-6 shrink-0"
+														className="h-8 w-8 shrink-0"
 														aria-hidden="true"
 													/>
 													{item.name}
@@ -188,31 +169,7 @@ export default function DashboardLayout({
 										))}
 									</ul>
 								</li>
-								<li>
-									<div className="text-xs font-semibold leading-6 text-gray-400">
-										Your teams
-									</div>
-									<ul role="list" className="-mx-2 mt-2 space-y-1">
-										{teams.map((team) => (
-											<li key={team.name}>
-												<a
-													href={team.href}
-													className={classNames(
-														team.current
-															? "bg-gray-800 text-white"
-															: "text-gray-400 hover:text-white hover:bg-gray-800",
-														"group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-													)}
-												>
-													<span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-														{team.initial}
-													</span>
-													<span className="truncate">{team.name}</span>
-												</a>
-											</li>
-										))}
-									</ul>
-								</li>
+
 								<li className="-mx-6 mt-auto">
 									<a
 										href="#"
