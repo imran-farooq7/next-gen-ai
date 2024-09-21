@@ -1,9 +1,12 @@
-import Navbar from "@/components/Navbar";
+import Card from "@/components/Card";
+import templates from "@/lib/constants";
 
 const DashboardPage = () => {
 	return (
-		<div className="text-6xl">
-			<h1>Dashboard</h1>
+		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{templates.map((template) => (
+				<Card template={template} key={template.slug} />
+			))}
 		</div>
 	);
 };
