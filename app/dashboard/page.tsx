@@ -5,6 +5,9 @@ import { useState } from "react";
 
 const DashboardPage = () => {
 	const [search, setSearch] = useState("");
+	const filteredTemplates = templates.filter((template) =>
+		template.name.toLowerCase().includes(search.toLowerCase())
+	);
 	return (
 		<>
 			<div className="p-10 my-5 mx-5 mb-5 rounded-lg dark:bg-gray-900 flex flex-col justify-center items-center">
@@ -23,7 +26,7 @@ const DashboardPage = () => {
 				</div>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{templates.map((template) => (
+				{filteredTemplates.map((template) => (
 					<Card template={template} key={template.slug} />
 				))}
 			</div>

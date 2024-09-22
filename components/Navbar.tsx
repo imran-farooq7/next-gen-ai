@@ -74,18 +74,17 @@ export default function Navbar({ user }: { user?: User }) {
 									}
 									className="h-12 w-12 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
 								>
-									{resolvedTheme === "light" && (
+									{resolvedTheme === "dark" ? (
 										<svg
-											className="fill-violet-700 block dark:hidden"
+											className="fill-violet-700 block"
 											fill="currentColor"
 											viewBox="0 0 20 20"
 										>
 											<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
 										</svg>
-									)}
-									{resolvedTheme === "dark" && (
+									) : (
 										<svg
-											className="fill-yellow-500 hidden dark:block"
+											className="fill-yellow-500  dark:block"
 											fill="currentColor"
 											viewBox="0 0 20 20"
 										>
