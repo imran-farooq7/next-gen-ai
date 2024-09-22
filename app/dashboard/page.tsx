@@ -1,6 +1,7 @@
 "use client";
 import Card from "@/components/Card";
 import templates from "@/lib/constants";
+import Link from "next/link";
 import { useState } from "react";
 
 const DashboardPage = () => {
