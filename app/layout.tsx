@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { auth } from "@/auth";
+import { ThemeProvider } from "next-themes";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -23,8 +24,10 @@ export default async function RootLayout({
 	return (
 		<html lang="en">
 			<body className={poppins.className}>
-				<Navbar user={session?.user!} />
-				{children}
+				<ThemeProvider attribute="class">
+					<Navbar user={session?.user!} />
+					{children}
+				</ThemeProvider>
 			</body>
 		</html>
 	);
