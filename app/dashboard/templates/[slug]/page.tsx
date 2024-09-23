@@ -1,4 +1,5 @@
 import Templates from "@/lib/constants";
+import Image from "next/image";
 interface Template {
 	name: string;
 	desc: string;
@@ -23,7 +24,16 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
 			<div className="col-span-1 rounded-md shadow-lg border p-4">
-				template form
+				<div className="flex flex-col gap-4">
+					<Image
+						src={template.icon}
+						alt={template.name}
+						width={50}
+						height={50}
+					/>
+					<h2 className="font-medium text-lg">{template.name}</h2>
+					<p className="text-gray-400">{template.desc}</p>
+				</div>
 				<form>
 					{template.form.map((field) => (
 						<div key={field.label} className="my-2 flex flex-col">
@@ -36,7 +46,7 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 									name={field.name}
 									placeholder={field.name}
 									required={field.required}
-									className="w-full border shadow-lg outline-none text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 p-2"
+									className="w-full border shadow-md outline-none text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 p-2"
 								/>
 							) : (
 								<textarea
