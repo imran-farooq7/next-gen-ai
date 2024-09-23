@@ -1,6 +1,8 @@
 "use client";
+import { generateText } from "@/lib/actions/actions";
 import Templates from "@/lib/constants";
 import Image from "next/image";
+import { useState } from "react";
 interface Template {
 	name: string;
 	desc: string;
@@ -21,17 +23,24 @@ interface Props {
 	};
 }
 const TemplatePage = ({ params: { slug } }: Props) => {
+	const [query, setQuery] = useState("");
+	const [aiConent, setAiContent] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	const template = Templates.find((t) => t.slug === slug) as Template;
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		try {
+			setIsLoading(true);
+			const res = await generateText(template.aiPrompt + query);
+			setAiContent(res.data);
+		} catch (error) {
+			setAiContent("Something went wrong. Please try again later.");
+		} finally {
+			setIsLoading(false);
+			console.log(aiConent);
+		}
 	};
-	const handleChange = (
-		e:
-			| React.ChangeEvent<HTMLInputElement>
-			| React.ChangeEvent<HTMLTextAreaElement>
-	) => {
-		console.log(e.target.value);
-	};
+
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-3 gap-5 px-5">
 			<div className="col-span-1 rounded-md shadow-lg border p-4">
@@ -56,14 +65,16 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 									type="text"
 									name={field.name}
 									placeholder={field.name}
-									onChange={handleChange}
+									onChange={(e) => setQuery(e.target.value)}
+									value={query}
 									required={field.required}
 									className="w-full border shadow-md outline-none text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 p-2"
 								/>
 							) : (
 								<textarea
 									rows={4}
-									onChange={handleChange}
+									value={query}
+									onChange={(e) => setQuery(e.target.value)}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									defaultValue={""}
 								/>
@@ -71,13 +82,14 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 						</div>
 					))}
 					<button
-						className="bg-emerald-500 my-4 text-white w-full px-4 py-3 rounded-lg"
+						className="disabled:cursor-wait bg-emerald-500 my-4 text-white w-full px-4 py-3 rounded-lg"
 						type="submit"
 					>
-						Generate
+						{isLoading ? "Generating..." : "Generate"}
 					</button>
 				</form>
 			</div>
+			{aiConent ?? "Ai conent render here"}
 		</div>
 	);
 };
