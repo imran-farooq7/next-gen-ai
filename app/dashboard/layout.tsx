@@ -13,7 +13,8 @@ import {
 	WalletIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import Loading from "../loading";
 
 const navigation = [
 	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
@@ -203,7 +204,9 @@ export default function DashboardLayout({
 			</div>
 
 			<main className="pb-10 pt-24 lg:pl-72">
-				<div className="px-4 sm:px-6 lg:px-8">{children}</div>
+				<div className="px-4 sm:px-6 lg:px-8">
+					<Suspense fallback={<Loading />}>{children}</Suspense>
+				</div>
 			</main>
 		</div>
 	);
