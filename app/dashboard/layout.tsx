@@ -15,6 +15,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { Suspense, useState } from "react";
 import Loading from "../loading";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navigation = [
 	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
@@ -48,6 +50,7 @@ export default function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const pathName = usePathname();
 
 	return (
 		<div>
@@ -142,10 +145,10 @@ export default function DashboardLayout({
 								<ul role="list" className="-mx-2 space-y-1">
 									{navigation.map((item) => (
 										<li key={item.name}>
-											<a
+											<Link
 												href={item.href}
 												className={classNames(
-													item.current
+													item.href === pathName
 														? "bg-gray-800 text-white"
 														: "text-gray-400 hover:text-white hover:bg-gray-800",
 													"group flex items-center gap-x-3 rounded-md p-2 text-lg leading-6 font-semibold"
@@ -156,7 +159,7 @@ export default function DashboardLayout({
 													aria-hidden="true"
 												/>
 												{item.name}
-											</a>
+											</Link>
 										</li>
 									))}
 								</ul>

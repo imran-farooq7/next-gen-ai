@@ -9,6 +9,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/16/solid";
 import { useSession } from "next-auth/react";
+import MarkdownEditor from "@uiw/react-markdown-editor";
 export interface Template {
 	name: string;
 	desc: string;
@@ -111,11 +112,10 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 					</form>
 				</div>
 				<div className="col-span-2">
-					<ReactQuill
-						placeholder="Your AI generated appear here"
+					<MarkdownEditor
 						value={aiConent}
-						className="h-full"
-						formats={["content"]}
+						height="400px"
+						defaultValue={"Ai generated content display here..."}
 					/>
 				</div>
 			</div>
