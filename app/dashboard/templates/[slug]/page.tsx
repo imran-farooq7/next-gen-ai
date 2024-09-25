@@ -1,5 +1,5 @@
 "use client";
-import { generateText } from "@/lib/actions/actions";
+import { generateText, saveQuery } from "@/lib/actions/actions";
 import Templates from "@/lib/constants";
 import Image from "next/image";
 import ReactQuill from "react-quill";
@@ -8,7 +8,8 @@ import "react-quill/dist/quill.snow.css";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/16/solid";
-interface Template {
+import { useSession } from "next-auth/react";
+export interface Template {
 	name: string;
 	desc: string;
 	category: string;
@@ -31,6 +32,7 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 	const [query, setQuery] = useState("");
 	const [aiConent, setAiContent] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const { data } = useSession();
 	const template = Templates.find((t) => t.slug === slug) as Template;
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -38,6 +40,12 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 			setIsLoading(true);
 			const res = await generateText(template.aiPrompt + query);
 			setAiContent(res.data);
+			await saveQuery({
+				template,
+				content: res.data,
+				email: data?.user?.email!,
+				query,
+			});
 		} catch (error) {
 			setAiContent("Something went wrong. Please try again later.");
 		} finally {

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { auth } from "@/auth";
 import { ThemeProvider } from "next-themes";
+import AuthProvider from "@/providers/AuthProvider";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -25,8 +26,10 @@ export default async function RootLayout({
 		<html lang="en">
 			<body className={poppins.className}>
 				<ThemeProvider attribute="class">
-					<Navbar user={session?.user!} />
-					{children}
+					<AuthProvider>
+						<Navbar user={session?.user!} />
+						{children}
+					</AuthProvider>
 				</ThemeProvider>
 			</body>
 		</html>
