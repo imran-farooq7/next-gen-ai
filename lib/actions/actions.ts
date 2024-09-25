@@ -1,9 +1,8 @@
 "use server";
 
-import { Template } from "@/app/dashboard/templates/[slug]/page";
+import { auth } from "@/auth";
 import { prisma } from "@/prisma/db";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { InputJsonValue } from "@prisma/client/runtime/library";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API!);
 
 export const generateText = async (prompt: string) => {
@@ -39,6 +38,25 @@ export const saveQuery = async ({
 	} catch (error) {
 		return {
 			status: "error",
+		};
+	}
+};
+export const getAllQueries = async () => {
+	const session = await auth();
+	const queries = await prisma.query.findMany({
+		where: {
+			email: session?.user?.email!,
+		},
+	});
+	if (queries.length > 0) {
+		return {
+			status: "success",
+			data: queries,
+		};
+	} else {
+		return {
+			status: "error",
+			message: "Something went wrong",
 		};
 	}
 };
