@@ -1,3 +1,4 @@
+import { countUsage } from "@/lib/actions/actions";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 

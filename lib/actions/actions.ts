@@ -60,3 +60,34 @@ export const getAllQueries = async () => {
 		};
 	}
 };
+export const countUsage = async () => {
+	const session = await auth();
+	const currentDate = new Date();
+	const currentMonth = currentDate.getMonth() + 1;
+	const currentYear = currentDate.getFullYear();
+	// const count = await prisma.query.aggregate({
+	// 	where: {
+	// 		email: session?.user?.email!,
+
+	// 			createdAt:{
+	// 				equals:{
+	// 					getFullYear: currentYear,
+	// 					},
+	// 				}
+	// 			}
+	// 		}
+	// 	},
+	const records = await prisma.query.findMany({
+		where: {
+			email: session?.user?.email!,
+			createdAt: {
+				gte: new Date(currentYear, currentMonth - 1, 1), // Start of the current month
+				lt: new Date(currentYear, currentMonth, 0, 23, 59, 59), // End of the current month
+			},
+		},
+		select: {
+			content: true,
+		},
+	});
+	return records;
+};

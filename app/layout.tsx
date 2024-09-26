@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { auth } from "@/auth";
 import { ThemeProvider } from "next-themes";
 import AuthProvider from "@/providers/AuthProvider";
+import { countUsage } from "@/lib/actions/actions";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -22,6 +23,13 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await auth();
+	const text = await countUsage();
+	const totalWords = text.reduce((sum, record) => {
+		// Trim and split the content to calculate word count
+		const wordCount = record?.content?.trim().split(/\s+/).length;
+		return sum + wordCount!;
+	}, 0);
+
 	return (
 		<html lang="en">
 			<body className={poppins.className}>
