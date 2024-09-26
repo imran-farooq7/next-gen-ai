@@ -1,11 +1,11 @@
+import { auth } from "@/auth";
+import Navbar from "@/components/Navbar";
+import AuthProvider from "@/providers/AuthProvider";
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import { auth } from "@/auth";
-import { ThemeProvider } from "next-themes";
-import AuthProvider from "@/providers/AuthProvider";
-import { countUsage } from "@/lib/actions/actions";
+import UsageProvider from "@/providers/UsageProvider";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -23,20 +23,16 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await auth();
-	const text = await countUsage();
-	const totalWords = text.reduce((sum, record) => {
-		// Trim and split the content to calculate word count
-		const wordCount = record?.content?.trim().split(/\s+/).length;
-		return sum + wordCount!;
-	}, 0);
 
 	return (
 		<html lang="en">
 			<body className={poppins.className}>
 				<ThemeProvider attribute="class">
 					<AuthProvider>
-						<Navbar user={session?.user!} />
-						{children}
+						<UsageProvider>
+							<Navbar user={session?.user!} />
+							{children}
+						</UsageProvider>
 					</AuthProvider>
 				</ThemeProvider>
 			</body>

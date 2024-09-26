@@ -15,6 +15,13 @@ interface Props {
 
 export default function HistoryTable({ query }: Props) {
 	const wordCount = (text: string) => text.split(" ").length;
+	if (!query) {
+		return (
+			<h1 className="text-center text-red-500 text-2xl font-semibold mt-5">
+				No search history found
+			</h1>
+		);
+	}
 	return (
 		<div className="px-4 sm:px-6 lg:px-8">
 			<div className="mt-8 flow-root">
