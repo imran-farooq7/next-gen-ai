@@ -1,4 +1,5 @@
 import { CountContext } from "@/providers/UsageProvider";
+import Link from "next/link";
 import { useContext } from "react";
 
 const CreditsUsageBar = () => {
@@ -19,9 +20,12 @@ const CreditsUsageBar = () => {
 						{ctx?.count} / {credits} usage
 					</div>
 				</div>
-				<button className="hover:scale-105 transition-all ease-in-out bg-emerald-500 my-4 text-white w-full px-4 py-3 rounded-lg">
+				<Link
+					href={"/membership"}
+					className="hover:scale-105 block text-center transition-all ease-in-out bg-emerald-500 my-4 text-white w-full px-4 py-3 rounded-lg"
+				>
 					Upgrade
-				</button>
+				</Link>
 			</div>
 		</div>
 	);
