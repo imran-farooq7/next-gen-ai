@@ -2,14 +2,14 @@
 import { generateText, saveQuery } from "@/lib/actions/actions";
 import Templates from "@/lib/constants";
 import Image from "next/image";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-import { useState } from "react";
-import Link from "next/link";
+import { CountContext } from "@/providers/UsageProvider";
 import { ArrowLeftIcon } from "@heroicons/react/16/solid";
-import { useSession } from "next-auth/react";
 import MarkdownEditor from "@uiw/react-markdown-editor";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useContext, useState } from "react";
 export interface Template {
 	name: string;
 	desc: string;
@@ -33,6 +33,7 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 	const [query, setQuery] = useState("");
 	const [aiConent, setAiContent] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const ctx = useContext(CountContext);
 	const { data } = useSession();
 	const template = Templates.find((t) => t.slug === slug) as Template;
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,6 +48,7 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 				email: data?.user?.email!,
 				query,
 			});
+			await ctx?.getUsage();
 		} catch (error) {
 			setAiContent("Something went wrong. Please try again later.");
 		} finally {

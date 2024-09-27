@@ -4,6 +4,7 @@ import { countUsage } from "@/lib/actions/actions";
 import { createContext, useEffect, useState } from "react";
 interface Count {
 	count: number;
+	getUsage: () => Promise<void>;
 }
 export const CountContext = createContext<Count | null>(null);
 const UsageProvider = ({ children }: { children: React.ReactNode }) => {
@@ -21,7 +22,9 @@ const UsageProvider = ({ children }: { children: React.ReactNode }) => {
 		setCount(totalWords);
 	};
 	return (
-		<CountContext.Provider value={{ count }}>{children}</CountContext.Provider>
+		<CountContext.Provider value={{ count, getUsage }}>
+			{children}
+		</CountContext.Provider>
 	);
 };
 
