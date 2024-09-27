@@ -18,6 +18,7 @@ import Loading from "../loading";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import CreditsUsageBar from "@/components/CreditsUsageBar";
+import Modal from "@/components/Modal";
 
 const navigation = [
 	{ name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
@@ -165,6 +166,7 @@ export default function DashboardLayout({
 									))}
 									<li className="pt-72">
 										<CreditsUsageBar />
+										<Modal />
 									</li>
 								</ul>
 							</li>
