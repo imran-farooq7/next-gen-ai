@@ -1,7 +1,8 @@
 import React from "react";
+import PlanCard from "../../components/PlanCard";
 
 const MembershipPage = () => {
-	return <div>membership</div>;
+	return <PlanCard />;
 };
 
 export default MembershipPage;
