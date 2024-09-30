@@ -4,6 +4,14 @@ import { auth } from "@/auth";
 import { prisma } from "@/prisma/db";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API!);
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+	apiVersion: "2024-06-20",
+});
+interface CheckoutSessionResponse {
+	url?: string;
+	error?: string;
+}
 
 export const generateText = async (prompt: string) => {
 	const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -90,4 +98,38 @@ export const countUsage = async () => {
 		},
 	});
 	return records;
+};
+
+export const createCheckoutSession = async (
+	req: Request,
+	res: Response
+): Promise<CheckoutSessionResponse> => {
+	const session = await auth();
+	if (!session?.user?.email) {
+		return {
+			error: "User not found",
+		};
+	}
+	try {
+		const existingUser = await prisma.transaction.findFirst({
+			where: {
+				email: session.user.email,
+			},
+		});
+		if (existingUser) {
+			const subscription = await stripe.subscriptions.list({
+				customer: existingUser.customerId,
+				status: "all",
+				limit: 1,
+			});
+			const currentSubscription = subscription.data.find(
+				(sub) => sub.status === "active"
+			);
+			if (currentSubscription) {
+				return {
+					error: "you already have active subscription",
+				};
+			}
+		}
+	} catch (error) {}
 };
