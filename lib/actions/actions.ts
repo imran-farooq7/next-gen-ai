@@ -131,5 +131,25 @@ export const createCheckoutSession = async (
 				};
 			}
 		}
-	} catch (error) {}
+		const checkoutSession = await stripe.checkout.sessions.create({
+			payment_method_types: ["card"],
+			line_items: [
+				{
+					price: process.env.STRIPE_PRODUCT_PRICE_ID,
+					quantity: 1,
+				},
+			],
+			mode: "subscription",
+			customer_email: session.user.email,
+			success_url: `${process.env.NEXT_PUBLIC_URL}/dashboard`,
+			cancel_url: `${process.env.NEXT_PUBLIC_URL}`,
+		});
+		return {
+			url: checkoutSession.url!,
+		};
+	} catch (error) {
+		return {
+			error: "Something went wrong while creating checkout session",
+		};
+	}
 };
