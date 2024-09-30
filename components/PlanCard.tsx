@@ -1,7 +1,10 @@
 "use client";
+import { createCheckoutSession } from "@/lib/actions/actions";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const tiers = [
 	{
@@ -41,7 +44,25 @@ function classNames(...classes: any[]) {
 
 export default function PlanCard() {
 	const session = useSession();
-	const handleCheckout = () => {};
+	const router = useRouter();
+	const handleCheckout = async (name: string) => {
+		if (name === "Free") {
+			console.log("free");
+			router.push("/dashboard");
+		} else {
+			console.log("paid");
+			try {
+				const res = await createCheckoutSession();
+				if (res.error) {
+					toast.error(res.error);
+				} else {
+					window.location.href = res.url!;
+				}
+			} catch (error) {
+				toast.error("Something went wrong. Please try again.");
+			}
+		}
+	};
 	return (
 		<div className="isolat px-6 py-24 sm:py-32 lg:px-8">
 			<div className="mx-auto max-w-2xl text-center lg:max-w-4xl">
@@ -97,7 +118,7 @@ export default function PlanCard() {
 							))}
 						</ul>
 						<button
-							onClick={handleCheckout}
+							onClick={() => handleCheckout(tier.name)}
 							className={classNames(
 								"bg-emerald-500 dark:bg-white dark:text-black text-white shadow hover:bg-emerald-700",
 

@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import UsageProvider from "@/providers/UsageProvider";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -32,6 +33,7 @@ export default async function RootLayout({
 						<UsageProvider>
 							<Navbar user={session?.user!} />
 							{children}
+							<Toaster />
 						</UsageProvider>
 					</AuthProvider>
 				</ThemeProvider>

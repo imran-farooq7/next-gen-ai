@@ -100,56 +100,54 @@ export const countUsage = async () => {
 	return records;
 };
 
-export const createCheckoutSession = async (
-	req: Request,
-	res: Response
-): Promise<CheckoutSessionResponse> => {
-	const session = await auth();
-	if (!session?.user?.email) {
-		return {
-			error: "User not found",
-		};
-	}
-	try {
-		const existingUser = await prisma.transaction.findFirst({
-			where: {
-				email: session.user.email,
-			},
-		});
-		if (existingUser) {
-			const subscription = await stripe.subscriptions.list({
-				customer: existingUser.customerId,
-				status: "all",
-				limit: 1,
-			});
-			const currentSubscription = subscription.data.find(
-				(sub) => sub.status === "active"
-			);
-			if (currentSubscription) {
-				return {
-					error: "you already have active subscription",
-				};
-			}
+export const createCheckoutSession =
+	async (): Promise<CheckoutSessionResponse> => {
+		const session = await auth();
+		if (!session?.user?.email) {
+			return {
+				error: "User not found",
+			};
 		}
-		const checkoutSession = await stripe.checkout.sessions.create({
-			payment_method_types: ["card"],
-			line_items: [
-				{
-					price: process.env.STRIPE_PRODUCT_PRICE_ID,
-					quantity: 1,
+		try {
+			const existingUser = await prisma.transaction.findFirst({
+				where: {
+					email: session.user.email,
 				},
-			],
-			mode: "subscription",
-			customer_email: session.user.email,
-			success_url: `${process.env.NEXT_PUBLIC_URL}/dashboard`,
-			cancel_url: `${process.env.NEXT_PUBLIC_URL}`,
-		});
-		return {
-			url: checkoutSession.url!,
-		};
-	} catch (error) {
-		return {
-			error: "Something went wrong while creating checkout session",
-		};
-	}
-};
+			});
+			if (existingUser) {
+				const subscription = await stripe.subscriptions.list({
+					customer: existingUser.customerId,
+					status: "all",
+					limit: 1,
+				});
+				const currentSubscription = subscription.data.find(
+					(sub) => sub.status === "active"
+				);
+				if (currentSubscription) {
+					return {
+						error: "you already have active subscription",
+					};
+				}
+			}
+			const checkoutSession = await stripe.checkout.sessions.create({
+				payment_method_types: ["card"],
+				line_items: [
+					{
+						price: process.env.STRIPE_PRODUCT_PRICE_ID,
+						quantity: 1,
+					},
+				],
+				mode: "subscription",
+				customer_email: session.user.email,
+				success_url: `${process.env.NEXT_PUBLIC_URL}/dashboard`,
+				cancel_url: `${process.env.NEXT_PUBLIC_URL}`,
+			});
+			return {
+				url: checkoutSession.url!,
+			};
+		} catch (error) {
+			return {
+				error: "Something went wrong while creating checkout session",
+			};
+		}
+	};
