@@ -4,6 +4,7 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 const tiers = [
@@ -43,15 +44,16 @@ function classNames(...classes: any[]) {
 }
 
 export default function PlanCard() {
+	const [loading, setLoading] = useState(false);
 	const session = useSession();
 	const router = useRouter();
 	const handleCheckout = async (name: string) => {
 		if (name === "Free") {
-			console.log("free");
 			router.push("/dashboard");
 		} else {
 			console.log("paid");
 			try {
+				setLoading(true);
 				const res = await createCheckoutSession();
 				if (res.error) {
 					toast.error(res.error);
@@ -60,6 +62,8 @@ export default function PlanCard() {
 				}
 			} catch (error) {
 				toast.error("Something went wrong. Please try again.");
+			} finally {
+				setLoading(false);
 			}
 		}
 	};
@@ -119,13 +123,19 @@ export default function PlanCard() {
 						</ul>
 						<button
 							onClick={() => handleCheckout(tier.name)}
+							disabled={loading}
 							className={classNames(
-								"bg-emerald-500 dark:bg-white dark:text-black text-white shadow hover:bg-emerald-700",
-
+								"bg-emerald-500 dark:bg-white dark:text-black text-white shadow hover:bg-emerald-700 disabled:cursor-wait",
 								"mt-8 block w-full rounded-md py-2.5 px-3.5 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2  sm:mt-10"
 							)}
 						>
-							{session.data?.user?.email ? "Get Started" : "Sign in"}
+							{loading ? (
+								<span className="animate-pulse">Submitting...</span>
+							) : session.data?.user?.email ? (
+								"Get Started"
+							) : (
+								"Sign in"
+							)}
 						</button>
 					</div>
 				))}
