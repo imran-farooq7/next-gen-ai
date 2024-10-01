@@ -1,6 +1,6 @@
 "use client";
 
-import { countUsage } from "@/lib/actions/actions";
+import { checkSubscriptionStatus, countUsage } from "@/lib/actions/actions";
 import {
 	createContext,
 	Dispatch,
@@ -13,19 +13,30 @@ interface Count {
 	getUsage: () => Promise<void>;
 	openModal: boolean;
 	setOpenModal: Dispatch<SetStateAction<boolean>>;
+	subStatus: string;
 }
 export const CountContext = createContext<Count | null>(null);
 const UsageProvider = ({ children }: { children: React.ReactNode }) => {
 	const [openModal, setOpenModal] = useState(false);
 	const [count, setCount] = useState(0);
+	const [subStatus, setSubStatus] = useState("");
 	useEffect(() => {
 		getUsage();
-	}, [count]);
+		getSubStatus();
+	}, []);
 	useEffect(() => {
-		if (count < 10000) {
+		if (count > 10000) {
 			setOpenModal(true);
 		}
 	}, []);
+	const getSubStatus = async () => {
+		const res = await checkSubscriptionStatus();
+		if (res?.status === "active") {
+			setSubStatus("active");
+		} else {
+			setSubStatus("inactive");
+		}
+	};
 	const getUsage = async () => {
 		const words = await countUsage();
 		const totalWords = words.reduce((sum, record) => {
@@ -36,7 +47,9 @@ const UsageProvider = ({ children }: { children: React.ReactNode }) => {
 		setCount(totalWords);
 	};
 	return (
-		<CountContext.Provider value={{ count, getUsage, openModal, setOpenModal }}>
+		<CountContext.Provider
+			value={{ count, getUsage, openModal, setOpenModal, subStatus }}
+		>
 			{children}
 		</CountContext.Provider>
 	);

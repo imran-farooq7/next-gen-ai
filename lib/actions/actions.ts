@@ -151,3 +151,33 @@ export const createCheckoutSession =
 			};
 		}
 	};
+export const checkSubscriptionStatus = async () => {
+	const session = await auth();
+	try {
+		const transaction = await prisma.transaction.findFirst({
+			where: {
+				email: session?.user?.email!,
+				status: "complete",
+			},
+		});
+		if (transaction && transaction.subscriprionId) {
+			const subscription = await stripe.subscriptions.retrieve(
+				transaction.subscriprionId
+			);
+			if (subscription.status === "active") {
+				return {
+					status: "active",
+				};
+			} else {
+				return {
+					status: "inactive",
+				};
+			}
+		}
+	} catch (error) {
+		return {
+			status: "error",
+			message: "Something went wrong while checking subscription status",
+		};
+	}
+};
