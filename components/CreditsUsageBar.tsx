@@ -12,7 +12,7 @@ const CreditsUsageBar = () => {
 				<div className="overflow-hidden rounded-full bg-gray-200">
 					<div
 						className="h-2 rounded-full bg-indigo-600"
-						style={{ width: (ctx?.count! / credits) * 100 }}
+						style={{ width: (ctx?.count! / credits) * 100 + "%" }}
 					/>
 				</div>
 				<div className="mt-3 text-white font-semibold">

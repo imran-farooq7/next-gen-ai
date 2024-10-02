@@ -106,10 +106,14 @@ const TemplatePage = ({ params: { slug } }: Props) => {
 							</div>
 						))}
 						<button
-							className="disabled:cursor-wait bg-emerald-500 my-4 text-white w-full px-4 py-3 rounded-lg"
+							className="disabled:cursor-not-allowed bg-emerald-500 my-4 text-white w-full px-4 py-3 rounded-lg"
 							type="submit"
+							disabled={ctx?.count! >= 0 && ctx?.subStatus === "inactive"}
 						>
-							{isLoading ? "Generating..." : "Generate"}
+							{isLoading && "Generating..."}
+							{ctx?.subStatus === "inactive" || ctx?.count! >= 10000
+								? "Subcribe to generate content"
+								: "Generate"}
 						</button>
 					</form>
 				</div>

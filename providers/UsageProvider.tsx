@@ -28,7 +28,7 @@ const UsageProvider = ({ children }: { children: React.ReactNode }) => {
 		if (count > 10000) {
 			setOpenModal(true);
 		}
-	}, []);
+	}, [count]);
 	const getSubStatus = async () => {
 		const res = await checkSubscriptionStatus();
 		if (res?.status === "active") {
