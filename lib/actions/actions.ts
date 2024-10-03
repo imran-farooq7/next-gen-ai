@@ -181,3 +181,24 @@ export const checkSubscriptionStatus = async () => {
 		};
 	}
 };
+export const createCustomerPortalSession = async () => {
+	const session = await auth();
+	try {
+		const transaction = await prisma.transaction.findFirst({
+			where: {
+				email: session?.user?.email!,
+			},
+		});
+		if (transaction) {
+			const portal = await stripe.billingPortal.sessions.create({
+				customer: transaction.customerId,
+				return_url: `${process.env.NEXT_PUBLIC_URL}/dashboard`,
+			});
+			return {
+				url: portal.url ?? `${process.env.NEXT_PUBLIC_URL}/dashboard`,
+			};
+		}
+	} catch (error) {
+		console.log(error);
+	}
+};
