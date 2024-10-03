@@ -194,8 +194,13 @@ export const createCustomerPortalSession = async () => {
 				customer: transaction.customerId,
 				return_url: `${process.env.NEXT_PUBLIC_URL}/dashboard`,
 			});
+			console.log(portal);
 			return {
-				url: portal.url ?? `${process.env.NEXT_PUBLIC_URL}/dashboard`,
+				url: portal.url,
+			};
+		} else {
+			return {
+				url: `${process.env.NEXT_PUBLIC_URL}/dashboard`,
 			};
 		}
 	} catch (error) {

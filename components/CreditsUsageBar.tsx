@@ -20,10 +20,12 @@ const CreditsUsageBar = () => {
 				</div>
 				<div className="mt-3 text-white font-semibold">
 					<div>
-						{ctx?.subStatus === "active" ? "Unlimited credits" : "usage"}
+						{ctx?.subStatus === "active"
+							? "Unlimited credits"
+							: `${ctx?.count!} / ${credits}`}
 					</div>
 				</div>
-				{ctx?.subStatus ? null : (
+				{ctx?.subStatus === "active" ? null : (
 					<Link
 						href={"/membership"}
 						className="hover:scale-105 block text-center transition-all ease-in-out bg-emerald-500 my-4 text-white w-full px-4 py-3 rounded-lg"
