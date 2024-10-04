@@ -1,5 +1,4 @@
 "use client";
-import { Fragment } from "react";
 import {
 	Disclosure,
 	DisclosureButton,
@@ -10,11 +9,11 @@ import {
 	MenuItems,
 	Transition,
 } from "@headlessui/react";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { User } from "next-auth";
+import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 const user = {
 	name: "Tom Cook",
@@ -28,11 +27,7 @@ const navigation = [
 	{ name: "Projects", href: "#", current: false },
 	{ name: "Calendar", href: "#", current: false },
 ];
-const userNavigation = [
-	{ name: "Your Profile", href: "#" },
-	{ name: "Settings", href: "#" },
-	{ name: "Sign out", href: "#" },
-];
+const userNavigation = [{ name: "Sign out", href: "#" }];
 
 function classNames(...classes: any[]) {
 	return classes.filter(Boolean).join(" ");
@@ -121,15 +116,15 @@ export default function Navbar({ user }: { user?: User }) {
 												{userNavigation.map((item) => (
 													<MenuItem key={item.name}>
 														{({ focus }) => (
-															<a
-																href={item.href}
+															<button
+																onClick={() => signOut()}
 																className={classNames(
 																	focus ? "bg-gray-100" : "",
 																	"block px-4 py-2 text-sm text-gray-700"
 																)}
 															>
 																{item.name}
-															</a>
+															</button>
 														)}
 													</MenuItem>
 												))}
@@ -140,7 +135,7 @@ export default function Navbar({ user }: { user?: User }) {
 								{!user && (
 									<button
 										type="button"
-										className="rounded bg-indigo-500 px-6 py-[10px] text-xs font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+										className="rounded bg-emerald-500 px-6 py-[10px] text-xs font-semibold text-white shadow-sm hover:bg-emerald-400"
 									>
 										Sign In
 									</button>
