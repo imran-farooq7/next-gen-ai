@@ -37,7 +37,7 @@ export const saveQuery = async ({
 				email,
 				query,
 				template,
-				content,
+				contents: content,
 			},
 		});
 		return {
@@ -94,7 +94,7 @@ export const countUsage = async () => {
 			},
 		},
 		select: {
-			content: true,
+			contents: true,
 		},
 	});
 	return records;
@@ -160,9 +160,9 @@ export const checkSubscriptionStatus = async () => {
 				status: "complete",
 			},
 		});
-		if (transaction && transaction.subscriprionId) {
+		if (transaction && transaction.subscriptionId) {
 			const subscription = await stripe.subscriptions.retrieve(
-				transaction.subscriprionId
+				transaction.subscriptionId
 			);
 			if (subscription.status === "active") {
 				return {

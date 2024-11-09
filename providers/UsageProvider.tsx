@@ -43,7 +43,7 @@ const UsageProvider = ({ children }: { children: React.ReactNode }) => {
 		const words = await countUsage();
 		const totalWords = words.reduce((sum, record) => {
 			// Trim and split the content to calculate word count
-			const wordCount = record?.content?.trim().split(/\s+/).length;
+			const wordCount = record?.contents?.trim().split(/\s+/).length;
 			return sum + wordCount!;
 		}, 0);
 		setCount(totalWords);
